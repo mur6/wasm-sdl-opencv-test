@@ -7,15 +7,46 @@
 </head>
 
 <body>
-  <h1>Wasm SDL test</h1>
-  <canvas id="canvas" width="128" height="32"></canvas>
+  <h1>Wasm SDL/OpenCV test</h1>
+  <canvas id="targetImage" width="256" height="425"></canvas>
+  <canvas id="canvas"></canvas>
   <script>
+    const init = async () => {
+        function passToWasm(uint8ArrData, width, height) {
+            // copying the uint8ArrData to the heap
+            const numBytes = uint8ArrData.length * uint8ArrData.BYTES_PER_ELEMENT;
+            const dataPtr = Module._malloc(numBytes);
+            const dataOnHeap = new Uint8Array(Module.HEAPU8.buffer, dataPtr, numBytes);
+            dataOnHeap.set(uint8ArrData);
+            // calling the Wasm function
+            console.log(dataOnHeap.byteOffset);
+            const res = Module.image_input(dataOnHeap.byteOffset, uint8ArrData.length, width, height);
+            console.log(res);
+            //Module._free(dataPtr);
+        }
+
+        function sendCanvas(canvas, baseImage) {
+            const context = canvas.getContext('2d');
+            context.drawImage(baseImage, 0, 0, baseImage.width, baseImage.height);
+            const { width } = canvas;
+            const { height } = canvas;
+            const imgData = context.getImageData(0, 0, canvas.width, canvas.height);
+            const uint8ArrData = new Uint8Array(imgData.data);
+
+            // pass the width and height too !!
+            passToWasm(uint8ArrData, imgData.width, imgData.height);
+        }
+
+        const baseImage = new Image();
+        baseImage.src = 'assets/lena.png';
+
+        baseImage.onload = () => sendCanvas(targetImage, baseImage);
+    };
     var Module = {
+        targetImage: document.getElementById("targetImage"),
         canvas: document.getElementById("canvas"),
         //canvas: (function() { return document.getElementById('canvas'); })(),
-      onRuntimeInitialized: function() {
-        console.log('Result: image_output=' + Module.image_output());
-      }
+        onRuntimeInitialized: init
     };
   </script>
   <script src="build/main.js"></script>
