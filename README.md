@@ -8,7 +8,7 @@ See: https://emscripten.org/docs/getting_started/downloads.html
 ## Build
 ```
 cd build
-emcmake cmake ..
+emcmake cmake -DOpenCV_DIR={WASM_COMPILED_OPENCV_DIR}/build_wasm ..
 emmake make
 cd ..
 ```
