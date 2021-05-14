@@ -1,9 +1,13 @@
 # wasm-sdl-opencv-test
 
 ## Prerequisite
-You need to have emscripten installed.
+You need to have emscripten, and OpenCV installed.
 
-See: https://emscripten.org/docs/getting_started/downloads.html
+See here to install emscripten:
+- https://emscripten.org/docs/getting_started/downloads.html
+
+To build OpenCV with Emscripten, see here:
+- https://docs.opencv.org/master/d4/da1/tutorial_js_setup.html
 
 ## Build
 ```
