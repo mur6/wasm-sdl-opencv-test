@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+
+<body>
+  <h1>Wasm SDL test</h1>
+  <canvas id="canvas" width="128" height="32"></canvas>
+  <script>
+    var Module = {
+        canvas: document.getElementById("canvas"),
+        //canvas: (function() { return document.getElementById('canvas'); })(),
+      onRuntimeInitialized: function() {
+        console.log('Result: image_output=' + Module.image_output());
+      }
+    };
+  </script>
+  <script src="build/main.js"></script>
+</body>
+
+</html>
